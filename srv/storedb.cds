@@ -1,105 +1,190 @@
-using {com.varsha.storedb as db} from '../db/schema';
-
+using { com.varsha.storedb as db } from '../db/schema';
 service StoreDB {
-
-    entity BusinessPartner as projection on db.BusinessPartner;
-    entity stores as projection on db.Store;
-   }
+    entity BuisinessPartner as projection on db.BuisinessPartner;
+    entity States as projection on db.States{
+        @UI.Hidden: true
+        ID,
+        *
+    };
    
-annotate StoreDB.BusinessPartner with @odata.draft.enabled;
+}
+annotate StoreDB.BuisinessPartner with @odata.draft.enabled;
+annotate StoreDB.States with @odata.draft.enabled;
+annotate StoreDB.BuisinessPartner  with {
+    name      @assert.format: '^[a-zA-Z]{2,}$';
+    pincode   @assert.format: '^[1-9][0-9]{5}$';
+    //telephone @assert.format: '^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$';
+}
 
-
-annotate StoreDB.BusinessPartner with {
-    add1    @assert.format: '^[a-zA-Z]{2,}$';
-    add2    @assert.format: '^[a-zA-Z]{2,}$';    
-      //telephone @assert.format: '^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$';
-};
-
-annotate StoreDB.BusinessPartner with @(
+annotate StoreDB.BuisinessPartner with @(
     UI.LineItem: [
         {
             $Type : 'UI.DataField',
-            Value : bpid
+            Value : bp_number
         },
         
         {
             $Type : 'UI.DataField',
+            Value : name
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : address_1
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : address_2
+        },
+          
+              {
+            $Type : 'UI.DataField',
+            Value : city
+        },
+         {
             Label: 'State',
-            Value : State
-        },
-        
-        {
+            Value: state.code
+        },  
+         {
             $Type : 'UI.DataField',
-            Value : add1
+            Value : is_gstin_number
         },
-        {
+         {
             $Type : 'UI.DataField',
-            Value : add2
+            Value : is_vendor
         },
-        
+         {
+            $Type : 'UI.DataField',
+            Value : is_customer
+        },
+           {
+            $Type : 'UI.DataField',
+            Value : is_gstn_registered
+        },
+
 
     ],
-    UI.SelectionFields: [ add1 , add2, ],    
-    UI.FieldGroup #BusinessPatnerInformation : {
+    UI.SelectionFields: [ name,city],    
+    UI.FieldGroup #BuisinessPartnerInformation : {
         $Type : 'UI.FieldGroupType',
         Data : [
             {
                 $Type : 'UI.DataField',
-                Value : bpid,
-            },
-           
-            {
-                $Type : 'UI.DataField',
-                Value : add1,
+                Value : bp_number,
             },
             {
                 $Type : 'UI.DataField',
-                Value : add2,
+                Value : name,
             },
+            {
+                $Type : 'UI.DataField',
+                Value : address_1,
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : address_2,
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : city,
+            },
+            {
+                Label :'State',
+                Value :state_ID,
+            },
+            {
+            $Type : 'UI.DataField',
+            Value : is_gstin_number,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : is_vendor,
+        },
+         {
+            $Type : 'UI.DataField',
+            Value : is_customer,
+        },
+           {
+            $Type : 'UI.DataField',
+            Value : is_gstn_registered,
+        },
+
             
-            {
-                $Type: 'UI.DataField',
-                Value: course_ID,
-            },
-           
+          
         ],
     },
     UI.Facets : [
         {
             $Type : 'UI.ReferenceFacet',
-            ID : 'InfoFacet',
-            Label : 'Business Patner',
-            Target : '@UI.FieldGroup#BusinessPatnerInformation',
+            ID : 'BuisinessPartnerInfoFacet',
+            Label : 'BuisinessPartnerInformation',
+            Target : '@UI.FieldGroup#BuisinessPartnerInformation',
         },
-       
+       /* 
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID : 'StudentLanguagesFacet',
+            Label : 'Student Languages Information',
+            Target : 'Languages/@UI.LineItem',
+        },
+      */  
     ],
     
 );
 
-annotate StoreDB.BusinessPartner with {
-    
-State @(
-        Common.Text: state.description,
+annotate StoreDB.States with @(
+    UI.LineItem: [
+        {
+            Value: code
+        },
+        {
+            Value: description
+        }
+    ],
+    UI.FieldGroup #States: {
+        $Type: 'UI.FieldGroupType',
+        Data: [
+            {
+                Value: code,
+            },
+            {
+                Value: description,
+            }
+        ],
+    },
+    UI.Facets: [
+        {
+            $Type: 'UI.ReferenceFacet',
+            ID: 'StatesFacet',
+            Label: 'States',
+            Target: '@UI.FieldGroup#States',
+        },
+    ],
+
+);
+annotate StoreDB.BuisinessPartner  with {
+     
+   state @(
+        Common.Text:state.description,
         Common.TextArrangement: #TextOnly,
         Common.ValueListWithFixedValues: true,
-        Common.ValueList: {
+        Common.ValueList : {
             Label: 'States',
-            CollectionPath: 'States',
+            CollectionPath : 'States',
             Parameters: [
                 {
-                    $Type: 'Common.ValueListParameterInOut',
-                    LocalDataProperty: state_ID,
-                    ValueListProperty: 'ID'
+                    $Type             : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : state_ID,
+                    ValueListProperty : 'ID'
                 },
                 {
-                    $Type: 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty: 'code'
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'code'
                 },
                 {
-                    $Type: 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty: 'description'
-                }
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'description'
+                },
             ]
         }
-    );
+    )
 };
