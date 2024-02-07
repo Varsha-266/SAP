@@ -61,7 +61,6 @@ annotate StoreDB.BuisinessPartner with @(
             Value : is_gstn_registered
         },
 
-
     ],
     UI.SelectionFields: [ name,city],    
     UI.FieldGroup #BuisinessPartnerInformation : {
