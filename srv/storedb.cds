@@ -1,7 +1,7 @@
 using { com.varsha.storedb as db } from '../db/schema';
 service StoreDB {
     entity BuisinessPartner as projection on db.BuisinessPartner;
-    entity States as projection on db.States{
+    entity States as projection on db.States {
         @UI.Hidden: true
         ID,
         *
@@ -12,7 +12,7 @@ annotate StoreDB.BuisinessPartner with @odata.draft.enabled;
 annotate StoreDB.States with @odata.draft.enabled;
 annotate StoreDB.BuisinessPartner  with {
     name      @assert.format: '^[a-zA-Z]{2,}$';
-    pincode   @assert.format: '^[1-9][0-9]{5}$';
+    pincode @assert.format: '^[1-9][0-9]{5}$';
     //telephone @assert.format: '^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$';
 }
 
