@@ -1,25 +1,25 @@
 using { com.varsha.storedb as db} from '../db/schema';
 
 
-service SELECTElectronics {
+service StoreDB {
     entity BusinessPartner as projection on db.BusinessPartner;
     entity Store as projection on db.Store;
     entity Product as projection on db.Product;
     entity StockData as projection on db.StockData;
     entity Purchase as projection on db.Purchase;
     entity State as projection on db.State;
-     entity Sales as projection on db.Sales;
+    entity Sales as projection on db.Sales;
     
 }
 
-annotate SELECTElectronics.BusinessPartner with @odata.draft.enabled;
-annotate SELECTElectronics.Store with @odata.draft.enabled;
-annotate SELECTElectronics.Product with @odata.draft.enabled;
-annotate SELECTElectronics.StockData with @odata.draft.enabled;
-annotate SELECTElectronics.Purchase with @odata.draft.enabled;
-annotate SELECTElectronics.Sales with @odata.draft.enabled;
+annotate StoreDB.BusinessPartner with @odata.draft.enabled;
+annotate StoreDB.Store with @odata.draft.enabled;
+annotate StoreDB.Product with @odata.draft.enabled;
+annotate StoreDB.StockData with @odata.draft.enabled;
+annotate StoreDB.Purchase with @odata.draft.enabled;
+annotate StoreDB.Sales with @odata.draft.enabled;
 
-annotate SELECTElectronics.BusinessPartner with {
+annotate StoreDB.BusinessPartner with {
     first_name      @assert.format: '^[a-zA-Z]{2,}$';
     last_name      @assert.format: '^[a-zA-Z]{2,}$';    
     pin_code    @assert.format: '^[1-9][0-9]{5}$';
@@ -27,15 +27,15 @@ annotate SELECTElectronics.BusinessPartner with {
 }
 
 
-annotate SELECTElectronics.Store with {
+annotate StoreDB.Store with {
     pin_code    @assert.format: '^[1-9][0-9]{5}$';
 }
 
-annotate SELECTElectronics.Product with {
+annotate StoreDB.Product with {
    product_img_url  @assert.format : '(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)'
 }
 
-annotate SELECTElectronics.State with @(
+annotate StoreDB.State with @(
     UI.LineItem : [
         {
             $Type : 'UI.DataField',
@@ -48,7 +48,7 @@ annotate SELECTElectronics.State with @(
     ]
 );
 
-annotate SELECTElectronics.Store with @(
+annotate StoreDB.Store with @(
     UI.LineItem: [
         {
             $Type : 'UI.DataField',
@@ -83,7 +83,7 @@ annotate SELECTElectronics.Store with @(
     UI.SelectionFields: [ store_id,name],       
 );
 
-annotate SELECTElectronics.Store with @(
+annotate StoreDB.Store with @(
     UI.FieldGroup #StoreInformation : {
         $Type : 'UI.FieldGroupType',
         Data : [
@@ -127,7 +127,7 @@ annotate SELECTElectronics.Store with @(
     ],    
 );
 
-annotate SELECTElectronics.BusinessPartner with @(
+annotate StoreDB.BusinessPartner with @(
     UI.LineItem: [
         {
             $Type : 'UI.DataField',
@@ -181,7 +181,7 @@ annotate SELECTElectronics.BusinessPartner with @(
     UI.SelectionFields: [ business_partner_number,first_name , last_name],       
 );
 
-annotate SELECTElectronics.BusinessPartner with @(
+annotate StoreDB.BusinessPartner with @(
     UI.FieldGroup #BusinessPartnerInformation : {
         $Type : 'UI.FieldGroupType',
         Data : [
@@ -237,7 +237,7 @@ annotate SELECTElectronics.BusinessPartner with @(
     ],    
 );
 
-annotate SELECTElectronics.Product with @(
+annotate StoreDB.Product with @(
     UI.LineItem: [
         {
             $Type : 'UI.DataField',
@@ -263,7 +263,7 @@ annotate SELECTElectronics.Product with @(
     UI.SelectionFields: [ product_id,product_name],       
 );
 
-annotate SELECTElectronics.Product with @(
+annotate StoreDB.Product with @(
     UI.FieldGroup #ProductInformation : {
         $Type : 'UI.FieldGroupType',
         Data : [
@@ -299,7 +299,7 @@ annotate SELECTElectronics.Product with @(
     ],    
 );
 
-annotate SELECTElectronics.StockData with @(
+annotate StoreDB.StockData with @(
     UI.LineItem: [
         {
             $Type : 'UI.DataField',
@@ -317,7 +317,7 @@ annotate SELECTElectronics.StockData with @(
     UI.SelectionFields: [ store_id_ID,product_id_ID],       
 );
 
-annotate SELECTElectronics.StockData with @(
+annotate StoreDB.StockData with @(
     UI.FieldGroup #StockDataInformation : {
         $Type : 'UI.FieldGroupType',
         Data : [
@@ -346,7 +346,7 @@ annotate SELECTElectronics.StockData with @(
 );
 
 
-annotate SELECTElectronics.Purchase with @(
+annotate StoreDB.Purchase with @(
     UI.LineItem: [
         {
             $Type : 'UI.DataField',
@@ -364,7 +364,7 @@ annotate SELECTElectronics.Purchase with @(
     UI.SelectionFields: [ ],       
 );
 
-annotate SELECTElectronics.Purchase with @(
+annotate StoreDB.Purchase with @(
     UI.FieldGroup #PurchaseInformation : {
         $Type : 'UI.FieldGroupType',
         Data : [
@@ -393,7 +393,7 @@ annotate SELECTElectronics.Purchase with @(
 );
 
 
-annotate SELECTElectronics.Sales with @(
+annotate StoreDB.Sales with @(
     UI.LineItem: [
         {
             $Type : 'UI.DataField',
@@ -411,7 +411,7 @@ annotate SELECTElectronics.Sales with @(
     UI.SelectionFields: [ ],       
 );
 
-annotate SELECTElectronics.Sales with @(
+annotate StoreDB.Sales with @(
     UI.FieldGroup #SalesInformation : {
         $Type : 'UI.FieldGroupType',
         Data : [
@@ -440,7 +440,7 @@ annotate SELECTElectronics.Sales with @(
 );
 
 
-annotate SELECTElectronics.BusinessPartner with {
+annotate StoreDB.BusinessPartner with {
     state @(     
         Common.ValueListWithFixedValues: true,
         Common.ValueList : {
