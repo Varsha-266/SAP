@@ -1,37 +1,78 @@
-const cds=require('@sap/cds')
-module.exports = cds.service.impl(async function () {
-    const { States, Business_Partner } = this.entities;
-    this.on("READ", Business_Partner, async (req) => {
-        const results = await cds.run(req.query);
-        return results;
-      });
-    this.before("CREATE",  Business_Partner, async (req) => {
-        const { bp_no, Is_gstn_registered, Gst_num } = req.data;
-        if (Is_gstn_registered && !Gst_num) {
+const cds = require('@sap/cds');
+module.exports = cds.service.impl(function() {
+    const { BusinessPartner,Product,State} = this.entities();
+
+    this.before(['CREATE','UPDATE'], BusinessPartner, async(req) => {
+        console.log(req.data);
+        const Is_gstn_registered = req.data.Is_gstn_registered;
+        const gstin_number = req.data.gstin_number;
+        console.log(Is_gstn_registered)
+        console.log(gstin_number)
+        if (Is_gstn_registered && gstin_number === null) {
+            console.log("hi");
             req.error({
-                code: "MISSING_GST_NUM",
-                message: "GSTIN number is mandatory when Is_gstn_registered is true",
-                target: "Gst_num",
+                'code': 'GSTINREQ',
+                message: 'GSTIN number is required',
+                target: 'gstin_number'
             });
         }
-        const query1 = SELECT.from( Business_Partner).where({ bp_no: req.data.bp_no });
-        const result = await cds.run(query1); // Execute the query using cds.run()
-        if (result.length > 0) {
-          req.error({
-            code: "STEMAILEXISTS",
-            message: " already exists",
-            target: "bp_np",
-          });
-        }
         
-      });
-      this.on('READ',States,async(req)=>{
-        genders=[
-            {"code":"TS","description":"Telangana"},
-            {"code":"AP","description":"Andra Pradesh"},
-            {"code":"TN","description":"Tamil Nadu"},
-        ]
-        genders.$count=genders.length
-        return genders;
-    })
-})
+
+
+
+});
+
+
+this.before(['CREATE','UPDATE'], Product, async(req) => {
+    console.log(req.data);
+    const cost_price = req.data. product_cost_price;
+    const selling_price = req.data.product_sell_price;
+    if(selling_price<cost_price){
+        req.error({
+            'code': 'SPLOW',
+            message: 'Selling price cannot be less than Cost price',
+            target: 'product_sell_price'
+        });
+    }
+});
+
+
+this.on(['READ'], State, async(req) => {
+      
+    var states = [
+         {"code":"AP", "description":"Andhra Pradesh"},
+         {"code":"AR", "description":"Arunachal Pradesh"},
+         {"code":"AS", "description":"Assam"},
+         {"code":"BR", "description":"Bihar"},
+         {"code":"CG", "description":"Chhattisgarh"},
+         {"code":"GA", "description":"Goa"},
+         {"code":"GJ", "description":"Gujarat"},
+         {"code":"HR", "description":"Haryana"},
+         {"code":"HP", "description":"Himachal Pradesh"},
+         {"code":"JK", "description":"Jammu and Kashmir"},
+         {"code":"JH", "description":"Jharkhand"},
+         {"code":"KA", "description":"Karnataka"},
+         {"code":"KL", "description":"Kerala"},
+         {"code":"MP", "description":"Madhya Pradesh"},
+         {"code":"MH", "description":"Maharashtra"},
+         {"code":"MN", "description":"Manipur"},
+         {"code":"ML", "description":"Meghalaya"},
+         {"code":"MZ", "description":"Mizoram"},
+         {"code":"NL", "description":"Nagaland"},
+         {"code":"OR", "description":"Orissa"},
+         {"code":"PB", "description":"Punjab"},
+         {"code":"RJ", "description":"Rajasthan"},
+         {"code":"SK", "description":"Sikkim"},
+         {"code":"TN", "description":"Tamil Nadu"},
+         {"code":"TR", "description":"Tripura"},
+         {"code":"UK", "description":"Uttarakhand"},
+         {"code":"UP", "description":"Uttar Pradesh"},
+         {"code":"WB", "description":"West Bengal"}
+     ]
+       states.$count=states.length;
+       return states;
+     });
+
+
+
+});

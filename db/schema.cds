@@ -1,68 +1,111 @@
 namespace com.varsha.storedb;
-using { managed, cuid } from '@sap/cds/common';
+using { managed,cuid } from '@sap/cds/common';
 
-/*@assert.unique:{
-    studentid:[studentid]
-}*/
-entity BuisinessPartner: cuid, managed {
-    @title: 'Business Partner Number'
-    bp_number: String(5);
-    @title: ' Name'
-    name: String(40) ;
-    @title: 'Address 1'
-    address_1: String(40);
-    @title: 'Adress 2'
-   address_2: String(100) ;
-    @title: 'City'
-    city: String(20) ;
-    @title: 'State'
-    state: Association to States;
-    @title: 'PIN Code'
-    pincode: String(10);
-    @title:'Is_GSTN_Registered'
-    is_gstn_registered: Boolean default false;
-    @title:'GSTIN Number'
-    is_gstin_number: String(15) @mandatory;
-    @title:'IS Vendor'
-    is_vendor: Boolean default false;
-    @title:'IS Customer'
-    is_customer: Boolean default false;
-   }
-   
-entity Store {
-    key ID: UUID;
-    store_id :String(10);
-    name         : String(100);
-    add1     : String(255);
-    add2     : String(255);
-    city         : String(100);
-    state        : Association to States;
-    PinCode      : String(10) @(assert.format: '^[1-9][0-9]{5}$');
+entity BusinessPartner : cuid,managed {
+    @title : 'Business Partner Number'
+    business_partner_number : Integer ;
+    @title : 'First Name'
+    first_name : String(30) @mandatory;
+    @title : 'Last Name'
+    last_name : String(30) @mandatory;
+    @title : 'Address 1'
+    address_1 : String(50) @mandatory;
+    @title : 'Address 2'
+    address_2 : String(50);
+    @title : 'City'
+    city : String(20) @mandatory;
+     @title : 'State'
+    state : String(10) @mandatory;
+    @title : 'PIN Code'
+    pin_code : String(20) @mandatory;
+    @title : 'Is_gstn_registered'
+    Is_gstn_registered : Boolean default false;
+    @title :'GSTIN Number'
+    gstin_number : String(30);
+    @title : 'Is Vendor'
+    is_vendor : Boolean;
+    @title : 'Is Customer'
+    is_customer : Boolean;
 }
-
-entity Product {
-    key ID: UUID;
-    p_id           : String(20); 
-    name     : String(100);
-    imageURL        : String(255);
-    costPrice       : Decimal(15, 2); 
-    sellPrice       : Decimal(15, 2); 
-}
-
-
-entity Stock {
-    key ID            : UUID;
-    store_id         : Association to Store;
-    product_id       : Association to Product;
-    stock_qty        : Integer;
-}
-
 
 @cds.persistence.skip
-entity States {
-    @title:'code'
-    key code: String(3);
-    @title:'description'
-    description:String(10);
-    
+entity State  {
+    @title : 'code'
+    code : String(5);
+    @title : 'description'
+    description : String(20);
+} 
+
+entity Store : cuid,managed {
+    @title : 'Store ID'
+    store_id : Integer ;
+    @title : 'Name'
+    name : String(30);
+    @title : 'Address 1'
+    address_1 : String(50) @mandatory;
+    @title : 'Address 2'
+    address_2 : String(50);
+    @title : 'City'
+    city : String(20) @mandatory;
+    @title : 'State'
+    state : String(10) @mandatory;
+    @title : 'PIN Code'
+    pin_code : String(10) @mandatory;
+}
+
+
+entity Product : cuid,managed {
+    @title : 'Product ID'
+    product_id : Integer ;
+    @title : 'Product Name'
+    product_name : String(30);
+    @title : 'Product Image URL'
+    product_img_url : String(50);
+    @title : 'Cost Price'
+    product_cost_price : Integer;
+    @title : 'Sell Price'
+    product_sell_price : Integer;
+}
+
+entity StockData : cuid,managed {
+    @title : 'Store ID'
+    store_id : Association to Store;
+    @title : 'Product ID'
+    product_id : Association to Product;
+    @title : 'Stock Quantity'
+    stock_qty : Integer;
+}
+
+entity Purchase : cuid,managed {
+    @title : 'Purchase Order Number'
+    pod : Integer;
+    @title : 'Business Partner'
+    business_partner_number : Association to BusinessPartner;
+    @title : 'Purchase order date'
+    purchase_order__date : Date;
+    @title : 'Items'
+    items : Composition of many {
+        key ID : UUID;
+        product_id : Association to Product;
+        qty : Association to StockData;
+        price : Integer;
+        store_id : Association to Store;
+    }
+}
+
+entity Sales : cuid,managed {
+    @title : 'Sales Order Number'
+    sod : Integer;
+    @title : 'Business Partner'
+    business_partner_number : Association to BusinessPartner;
+    @title : 'Sales date'
+    sales_date : Date;
+    @title : 'Items'
+    items : Composition of many {
+        key ID : UUID;
+        product_id : Association to Product;
+        qty : Association to StockData;
+        price : Integer;
+        store_id : Association to Store;
+    }
 }
