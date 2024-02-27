@@ -460,6 +460,11 @@ annotate StoreDB.BusinessPartner with {
             ]
         }
     );
-
-
 }
+annotate StoreDB.Product with {
+        @Common.Text:'(product)'
+        @Core.IsURL:true
+        @Core.MediaType:'image/jpg'
+        product_img_url
+
+    };

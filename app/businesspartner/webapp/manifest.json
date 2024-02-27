@@ -83,7 +83,6 @@
       "css": []
     },
     "routing": {
-      "config": {},
       "routes": [
         {
           "pattern": ":?query:",
@@ -109,6 +108,19 @@
                 "BusinessPartner": {
                   "detail": {
                     "route": "BusinessPartnerObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "BusinessPartnerListExt": {
+                      "press": "businesspartner.ext.businessPartnerListExt.BusinessPartnerListExt.setvendor",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "set vendor"
+                    }
                   }
                 }
               }
